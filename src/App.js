@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import styles from './App.module.scss';
+import Player from './components/Player/Player';
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -29,8 +31,12 @@ function App() {
   const [nextSongIndex, setNextSongIndex] = useState(currentSongIndex + 1);
 
   return (
-    <div className={styles.main}>
+    <div>
       Music player
+      <Player
+        song={songs[currentSongIndex]}
+        nextSong={songs[nextSongIndex]}>
+      </Player>
     </div>
   );
 }
