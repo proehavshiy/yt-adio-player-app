@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import styles from './App.module.scss';
 import Player from './components/Player/Player';
 
 function App() {
   // eslint-disable-next-line no-unused-vars
-  const [songs, setSongs] = useState([
+  const [songs] = useState([
     {
       title: 'Order',
       artist: 'ComaStudio',
@@ -30,13 +30,22 @@ function App() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [nextSongIndex, setNextSongIndex] = useState(currentSongIndex + 1);
 
+  useEffect(() => {
+    setNextSongIndex(() => {
+      if (currentSongIndex + 1 > songs.length - 1) return 0;
+      return currentSongIndex + 1;
+    });
+  }, [currentSongIndex]);
+
   return (
     <div className={styles.container}>
       <Player
-        song={songs[currentSongIndex]}
-        nextSong={songs[nextSongIndex]}>
-      </Player>
-    </div>
+        currentSongIndex={currentSongIndex}
+        setCurrentSongIndex={setCurrentSongIndex}
+        nextSongIndex={nextSongIndex}
+        songs={songs}
+      />
+    </div >
   );
 }
 

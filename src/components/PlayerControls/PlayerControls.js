@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +10,14 @@ import styles from './PlayerControls.module.scss';
 
 const b = block(styles);
 
-function PlayerControls() {
+function PlayerControls({ setCurrentSongIndex, setIsPlaying }) {
+
+  function handleSkip(e) {
+
+    setCurrentSongIndex((current) => {
+      return current
+    })
+  }
   return (
     <div className={b()}>
       <button className={b('skip')}>
