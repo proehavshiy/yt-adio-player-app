@@ -11,26 +11,15 @@ import styles from './PlayerControls.module.scss';
 const b = block(styles);
 
 function PlayerControls({ isPlaying, setIsPlaying, skipSong }) {
-  function handleSkip(e) {
-
-    // if () {
-    //   skipSong(true)
-    // } else {
-    //   skipSong(false)
-    // }
-  }
-
-  const handlePlay = () => setIsPlaying(!isPlaying);
-
   return (
     <div className={b()}>
-      <button className={b('skip')} onClick={handleSkip}>
+      <button className={b('skip')} onClick={() => skipSong(false)}>
         <FontAwesomeIcon icon={faBackward} />
       </button>
-      <button className={b('play')} onClick={handlePlay}>
+      <button className={b('play')} onClick={() => setIsPlaying(!isPlaying)}>
         <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
       </button>
-      <button className={b('skip')} onClick={handleSkip}>
+      <button className={b('skip')} onClick={() => skipSong(true)}>
         <FontAwesomeIcon icon={faForward} />
       </button>
     </div>
