@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
+import styles from './App.module.scss';
+
 function App() {
+  // eslint-disable-next-line no-unused-vars
   const [songs, setSongs] = useState([
     {
       title: 'Order',
@@ -23,7 +26,7 @@ function App() {
   ]);
 
   return (
-    <div className="App">
+    <div className={styles.main}>
       Music player
     </div>
   );
