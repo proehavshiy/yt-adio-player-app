@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
@@ -23,18 +25,43 @@ function Player({
       audioEl.current.pause();
     }
   });
+
+  function skipSong(forwards = true) {
+    // when next song
+    if (forwards) {
+      setCurrentSongIndex(() => {
+        let temp = currentSongIndex;
+        temp += 1;
+        if (temp > songs.length - 1) temp = 0;
+        return temp;
+      });
+      // when previous song
+    } else {
+      setCurrentSongIndex(() => {
+        let temp = currentSongIndex;
+        temp -= 1;
+        if (temp < 0) temp = songs.length - 1;
+        return temp;
+      });
+    }
+  }
+
+  const currentSong = songs[currentSongIndex];
+  const nextSong = songs[nextSongIndex];
+
   return (
     <div className={b()}>
-      <audio ref={audioEl}></audio>
+      <audio src={currentSong.src} ref={audioEl}></audio>
       <h4>Playing now</h4>
       <PlayerDetails
-        song={songs[currentSongIndex]}
+        song={currentSong}
       />
       <PlayerControls
-        setCurrentSongIndex={setCurrentSongIndex}
+        isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
+        skipSong={skipSong}
       />
-      <p><strong>Next up: </strong>{songs[nextSongIndex].title} by {songs[nextSongIndex].artist}</p>
+      <p><strong>Next up: </strong>{nextSong.title} by {nextSong.artist}</p>
     </div>
   );
 }

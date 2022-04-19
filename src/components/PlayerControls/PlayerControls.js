@@ -10,23 +10,27 @@ import styles from './PlayerControls.module.scss';
 
 const b = block(styles);
 
-function PlayerControls({ setCurrentSongIndex, setIsPlaying }) {
-
+function PlayerControls({ isPlaying, setIsPlaying, skipSong }) {
   function handleSkip(e) {
 
-    setCurrentSongIndex((current) => {
-      return current
-    })
+    // if () {
+    //   skipSong(true)
+    // } else {
+    //   skipSong(false)
+    // }
   }
+
+  const handlePlay = () => setIsPlaying(!isPlaying);
+
   return (
     <div className={b()}>
-      <button className={b('skip')}>
+      <button className={b('skip')} onClick={handleSkip}>
         <FontAwesomeIcon icon={faBackward} />
       </button>
-      <button className={b('play')}>
-        <FontAwesomeIcon icon={faPlay} />
+      <button className={b('play')} onClick={handlePlay}>
+        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
       </button>
-      <button className={b('skip')}>
+      <button className={b('skip')} onClick={handleSkip}>
         <FontAwesomeIcon icon={faForward} />
       </button>
     </div>
