@@ -4,6 +4,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PlayerDetails from '../PlayerDetails/PlayerDetails';
+import PlayerControls from '../PlayerControls/PlayerControls';
 import styles from './Player.module.scss';
 
 function Player({ song, nextSong }) {
@@ -14,7 +15,7 @@ function Player({ song, nextSong }) {
       <PlayerDetails
         song={song}
       />
-      {/* CONTROLS */}
+      <PlayerControls />
       <p><strong>Next up:</strong>{nextSong.title} by {nextSong.artist}</p>
     </div>
   );

@@ -1,3 +1,13 @@
+
+## Dependencies
+* `ESlint` and airbnb style-guide
+* `SASS` and `CSS Modules`
+* `Redux` for statemanagement
+
+## Libs
+* [fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
