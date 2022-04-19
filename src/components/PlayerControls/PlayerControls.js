@@ -4,17 +4,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlay, faPause, faForward, faBackward,
 } from '@fortawesome/free-solid-svg-icons';
+import block from 'bem-css-modules';
+import styles from './PlayerControls.module.scss';
+
+const b = block(styles);
 
 function PlayerControls() {
   return (
-    <div className="controls">
-      <button className="controls__skip">
+    <div className={b()}>
+      <button className={b('skip')}>
         <FontAwesomeIcon icon={faBackward} />
       </button>
-      <button className="controls__play">
+      <button className={b('play')}>
         <FontAwesomeIcon icon={faPlay} />
       </button>
-      <button className="controls__skip">
+      <button className={b('skip')}>
         <FontAwesomeIcon icon={faForward} />
       </button>
     </div>

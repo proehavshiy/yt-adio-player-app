@@ -6,6 +6,7 @@
 
 ## Libs
 * [fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
+* [bem-css-modules](https://www.npmjs.com/package/bem-css-modules)
 
 
 # Getting Started with Create React App

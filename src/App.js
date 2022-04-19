@@ -31,8 +31,7 @@ function App() {
   const [nextSongIndex, setNextSongIndex] = useState(currentSongIndex + 1);
 
   return (
-    <div>
-      Music player
+    <div className={styles.container}>
       <Player
         song={songs[currentSongIndex]}
         nextSong={songs[nextSongIndex]}>

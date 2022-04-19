@@ -1,14 +1,38 @@
 .player-details {
-
+  // background: #000;
   // .player-details__img
+  margin-bottom: 20px;
 
-  &__img {}
+
+  &__img {
+    position: relative;
+    width: fit-content;
+    max-width: 250px;
+    margin: 50px auto;
+
+
+    &>img {
+      display: block;
+      width: 100%;
+      border-radius: 16px;
+      border: 2px solid #EEE;
+    }
+  }
 
   // .player-details__title
 
-  &__title {}
+  &__title {
+    color: #EEE;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
   // .player-details__artist
 
-  &__artist {}
+  &__artist {
+    color: #AAA;
+    font-style: 20px;
+    text-align: center;
+  }
 }
