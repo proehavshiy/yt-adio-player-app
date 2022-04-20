@@ -11,7 +11,7 @@ function App() {
       title: 'Order',
       artist: 'ComaStudio',
       img_src: './img/pexels-alexander-kozlov-11784237.jpg',
-      src: './music/ComaStudio - Order.mp3',
+      src: './music/ComaStudio-Order.mp3',
     },
     {
       title: 'Cinematic Atmosphere',

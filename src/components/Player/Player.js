@@ -17,11 +17,24 @@ function Player({
 }) {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoopTrack, setIsLoopTrack] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [trackDuration, setTrackDuration] = useState(0);
+
+  // console.log('isLoopTrack:', isLoopTrack);
+
+  // console.log('audioEl.current.duration:', audioEl.current.duration);
+
+  // loop status checking
+  useEffect(() => {
+    console.log('isLoopTrack:', isLoopTrack);
+  }, [isLoopTrack]);
 
   useEffect(() => {
     if (isPlaying) {
-      audioEl.current.play();
+      audioEl.current.play()
+        .then()
+        .catch((err) => console.log('playing err:', err));
     } else {
       audioEl.current.pause();
     }
@@ -32,7 +45,8 @@ function Player({
     if (isPlaying) {
       setTimeout(() => {
         setCurrentTime(Number.parseInt(audioEl.current.currentTime, 10));
-        console.log('currentTime:', currentTime);
+        console.log('currentTime:', audioEl.current.currentTime);
+        console.log('trackDuration:', trackDuration);
       }, 1000);
     }
   });
@@ -57,12 +71,23 @@ function Player({
     }
   }
 
+  function loopTrack() {
+    if (isLoopTrack) {
+      audioEl.current.currentTime = 0;
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+  }
+
   const currentSong = songs[currentSongIndex];
   const nextSong = songs[nextSongIndex];
 
   return (
     <div className={b()}>
-      <audio src={currentSong.src} ref={audioEl}></audio>
+      <audio ref={audioEl} src={currentSong.src} preload="metadata" onEnded={loopTrack} onLoadedMetadata={() => {
+        setTrackDuration(audioEl.current.duration);
+      }}></audio>
       <h4>Playing now</h4>
       <PlayerDetails
         song={currentSong}
@@ -71,6 +96,8 @@ function Player({
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
         skipSong={skipSong}
+        isLoopTrack={isLoopTrack}
+        setIsLoopTrack={setIsLoopTrack}
       />
       <p><strong>Next up: </strong>{nextSong.title} by {nextSong.artist}</p>
     </div>
