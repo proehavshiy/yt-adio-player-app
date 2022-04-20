@@ -12,7 +12,7 @@ So I decided to make my own player app that can convert youtube music videos to 
 - [ ] volume changer
 - [ ] autoplay next track after ending of a current track
 - [ ] track duration path
-- [ ] track loop button
+- [x] loop track button
 - [ ] random order button
 ### Playlist functionality:
 - [ ] input for youtube videos links 
