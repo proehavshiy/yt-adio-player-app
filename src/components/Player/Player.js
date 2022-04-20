@@ -17,12 +17,23 @@ function Player({
 }) {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     if (isPlaying) {
       audioEl.current.play();
     } else {
       audioEl.current.pause();
+    }
+  });
+
+  // timer
+  useEffect(() => {
+    if (isPlaying) {
+      setTimeout(() => {
+        setCurrentTime(Number.parseInt(audioEl.current.currentTime, 10));
+        console.log('currentTime:', currentTime);
+      }, 1000);
     }
   });
 
