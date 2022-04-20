@@ -1,81 +1,51 @@
 
+# Youtube audio player
+My lovely Spotify has gone from Russia and grab playlist itself. <br />
+So I decided to make my own player app that can convert youtube music videos to audio tracks that I can listen to! 🥰
+
+<br />
+
+## To Do List
+### Interface functionality:
+- [x] play tracks
+- [x] skip tracks
+- [ ] volume changer
+- [ ] autoplay next track after ending of a current track
+- [ ] track duration path
+- [ ] track loop button
+- [ ] random order button
+### Playlist functionality:
+- [ ] input for youtube videos links 
+- [ ] video to audio converter
+- [ ] playlist storage (localStorage or Firebase)
+### Styles:
+- [ ] good-looking styles
+- [ ] cross-browser and adaptive layouts
+
 ## Dependencies
-* `ESlint` and airbnb style-guide
-* `SASS` and `CSS Modules`
-* `Redux` for statemanagement
+- [x] `ESlint` and airbnb style-guide
+- [x] `SASS` and `CSS Modules`
+- [ ] `Redux` for state management 
+
+<br />
 
 ## Libs
-* [fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
-* [bem-css-modules](https://www.npmjs.com/package/bem-css-modules)
+- [x] [fontawesome for player icons](https://fontawesome.com/v5/docs/web/use-with/react)
+- [x] [bem-css-modules for css bem-style](https://www.npmjs.com/package/bem-css-modules)
+- [ ] [ytdl-core for video to audio converting (backend)](https://www.npmjs.com/package/ytdl-core)
 
+<br />
 
-# Getting Started with Create React App
+## References
+* [Figma layout 1](https://www.figma.com/community/file/1076026332340759981)
+* [Figma layout 2](https://www.figma.com/file/YCU5I0mptwWXlE0zsRAETN/Music-Player-UI-KIT%F0%9F%8E%A7-(Community)?node-id=1%3A2648)
+* [Spotify UI Kit](https://www.figma.com/file/kBF55NUoaQeP4PUoTh51wR/Spotify-UI-Design-(Search%2FArtist-Profile)-(Community)?node-id=42%3A28)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<br />
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## You can run this project locally:
+* clone branch with `git clone git@github.com:proehavshiy/movies-explorer-frontend.git`
+* `npm run start` - run the project
+* `npm run build` - build final version
+* `npm run lint` - check linter errors
+* `npm run deploy` - build and deploy
