@@ -1,6 +1,7 @@
 {
   "name": "player-app",
   "version": "0.1.0",
+  "homepage": "https://proehavshiy.github.io/yt-adio-player-app",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -21,8 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "npx eslint .",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
