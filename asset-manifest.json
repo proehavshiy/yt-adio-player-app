@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/yt-adio-player-app/static/css/main.249346e1.css",
-    "main.js": "/yt-adio-player-app/static/js/main.ab16980f.js",
+    "main.css": "/yt-adio-player-app/static/css/main.c62aa049.css",
+    "main.js": "/yt-adio-player-app/static/js/main.226d75d4.js",
     "index.html": "/yt-adio-player-app/index.html",
-    "main.249346e1.css.map": "/yt-adio-player-app/static/css/main.249346e1.css.map",
-    "main.ab16980f.js.map": "/yt-adio-player-app/static/js/main.ab16980f.js.map"
+    "main.c62aa049.css.map": "/yt-adio-player-app/static/css/main.c62aa049.css.map",
+    "main.226d75d4.js.map": "/yt-adio-player-app/static/js/main.226d75d4.js.map"
   },
   "entrypoints": [
-    "static/css/main.249346e1.css",
-    "static/js/main.ab16980f.js"
+    "static/css/main.c62aa049.css",
+    "static/js/main.226d75d4.js"
   ]
 }
