@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable max-len */
@@ -57,6 +58,22 @@ function PlayerControls({
     }
   }
 
+  function formatTime(num) {
+    const integer = Number.parseInt(num, 10);
+
+    const hour = Math.trunc(integer / 3600);
+    const min = Math.trunc(integer / 60) % 60;
+    const sec = integer % 60;
+
+    function format() {
+      const getUnitOfTime = (val) => (`0${val}`).slice(-2);
+      const tempString = `${getUnitOfTime(hour)}:${getUnitOfTime(min)}:${getUnitOfTime(sec)}`;
+      return (!tempString[0] || !tempString[1]) ? tempString : tempString.slice(3);
+    }
+
+    return format();
+  }
+
   return (
     <div className={cn(controls)}>
       <div className={cn(sideControls)}>
@@ -78,8 +95,8 @@ function PlayerControls({
         </button>
       </div>
       <div className={cn(progressControls)}>
-        <div className={cn(timer, timerLength)}>{currentTime}</div>
-        <div className={cn(timer, timerCurrent)}>{trackDuration}</div>
+        <div className={cn(timer, timerLength)}>{formatTime(currentTime)}</div>
+        <div className={cn(timer, timerCurrent)}>{formatTime(trackDuration)}</div>
         <div className={cn(progressBar)} ref={progressBarRef} onClick={handleProgressBarClick}>
           <span ref={lengthSwitcher} style={{ left: barPosition }}></span>
         </div>
