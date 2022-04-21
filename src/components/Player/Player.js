@@ -42,13 +42,16 @@ function Player({
 
   // timer
   useEffect(() => {
-    if (isPlaying) {
-      setTimeout(() => {
-        setCurrentTime(Number.parseInt(audioEl.current.currentTime, 10));
-        console.log('currentTime:', audioEl.current.currentTime);
-        console.log('trackDuration:', trackDuration);
-      }, 1000);
-    }
+    console.log('currentTime:', audioEl.current.currentTime);
+    console.log('trackDuration:', trackDuration);
+
+    // if (isPlaying) {
+    // setTimeout(() => {
+    //   setCurrentTime(Number.parseInt(audioEl.current.currentTime, 10));
+    //   console.log('currentTime:', audioEl.current.currentTime);
+    //   console.log('trackDuration:', trackDuration);
+    // }, 1000);
+    // }
   });
 
   function skipSong(forwards = true) {
@@ -85,8 +88,13 @@ function Player({
 
   return (
     <div className={b()}>
-      <audio ref={audioEl} src={currentSong.src} preload="metadata" onEnded={loopTrack} onLoadedMetadata={() => {
-        setTrackDuration(audioEl.current.duration);
+      <audio ref={audioEl} src={currentSong.src} preload="metadata" onEnded={loopTrack} onTimeUpdate={(e) => {
+        setCurrentTime(e.target.currentTime);
+        // console.log('onTimeUpdate e:', e);
+        // console.log('current time:', e.target.currentTime);
+        // console.log('duretion:', e.target.duration);
+      }} onLoadedMetadata={(e) => {
+        setTrackDuration(e.target.duration);
       }}></audio>
       <h4>Playing now</h4>
       <PlayerDetails
