@@ -65,6 +65,7 @@ function Player({
       audioEl.current.currentTime = 0;
     } else {
       skipSong(true);
+      audioEl.current.currentTime = 0;
     }
   }
 

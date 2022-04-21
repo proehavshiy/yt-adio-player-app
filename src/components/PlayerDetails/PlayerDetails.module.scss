@@ -8,7 +8,7 @@
     position: relative;
     width: 200px;
     height: 200px;
-    margin: 20px auto 35px;
+    margin: 10px auto 25px;
 
 
     &>img {
@@ -24,10 +24,10 @@
 
   &__title {
     color: #EEE;
-    font-size: 28px;
+    font-size: 20px;
     text-align: center;
-    margin-bottom: 10px;
-    min-height: 60px;
+    margin-bottom: 5px;
+    min-height: 40px;
   }
 
   // .player-details__artist
