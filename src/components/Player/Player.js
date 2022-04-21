@@ -22,16 +22,6 @@ function Player({
   const [trackDuration, setTrackDuration] = useState(0);
   const [newCurrentTime, setNewCurrentTime] = useState(null);
 
-  console.log('currentTime:', currentTime);
-  console.log('newCurrentTime:', newCurrentTime);
-
-  // console.log('currentTime player:', currentTime);
-
-  // loop status checking
-  useEffect(() => {
-    console.log('isLoopTrack:', isLoopTrack);
-  }, [isLoopTrack]);
-
   useEffect(() => {
     if (isPlaying) {
       audioEl.current
@@ -41,7 +31,7 @@ function Player({
     } else {
       audioEl.current.pause();
     }
-  }, [isPlaying]);
+  }, [isPlaying, currentTime]);
 
   // upd time of an active track
   useEffect(() => {
@@ -71,9 +61,8 @@ function Player({
   function loopTrack() {
     if (isLoopTrack) {
       audioEl.current.currentTime = 0;
-      setIsPlaying(true);
     } else {
-      setIsPlaying(false);
+      skipSong(true);
     }
   }
 
@@ -83,9 +72,11 @@ function Player({
   return (
     <div className={b()}>
       <audio ref={audioEl} src={currentSong.src} preload="metadata"
-        onEnded={loopTrack}
         onTimeUpdate={(e) => {
           setCurrentTime(e.target.currentTime);
+        }}
+        onEnded={() => {
+          loopTrack();
         }}
         onLoadedMetadata={(e) => {
           setTrackDuration(e.target.duration);
