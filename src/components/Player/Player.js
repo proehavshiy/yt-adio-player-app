@@ -12,6 +12,8 @@ import styles from './Player.module.scss';
 
 const b = block(styles);
 
+// "homepage": "https://proehavshiy.github.io/yt-adio-player-app",
+
 function Player({
   currentSongIndex, setCurrentSongIndex, nextSongIndex, songs,
 }) {

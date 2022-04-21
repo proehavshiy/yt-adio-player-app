@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './App.module.scss';
 import Player from './components/Player/Player';
 
-// "homepage": "https://proehavshiy.github.io/yt-adio-player-app",
-
 function App() {
   // eslint-disable-next-line no-unused-vars
   const [songs] = useState([
