@@ -1,9 +1,10 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable max-len */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { createRef, useEffect } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlay, faPause, faForward, faBackward,
@@ -25,28 +26,34 @@ const {
 console.log('styles:', styles);
 
 function PlayerControls({
-  isPlaying, setIsPlaying, skipSong, isLoopTrack, setIsLoopTrack,
+  isPlaying, setIsPlaying, skipSong, isLoopTrack, setIsLoopTrack, trackDuration, currentTime, setNewCurrentTime,
 }) {
   const progressBarRef = createRef(null);
   const lengthSwitcher = createRef(null);
+  const [barPosition, setBarPosition] = useState(null);
 
   useEffect(() => {
-    // console.log('progressBarRef.clientWidth:', progressBarRef.current.clientWidth);
-    // console.log('lengthSwitcher.getBoundingClientRect:', lengthSwitcher.current.getBoundingClientRect());
-    // console.log('lengthSwitcher.offsetWidth:', lengthSwitcher.current.offsetWidth);
-  }, []);
+    const currentDuration = `${currentTime / trackDuration * 100}%`;
+    setBarPosition(currentDuration);
+  }, [currentTime]);
+
+  function rewindTrack(seed) {
+    setNewCurrentTime(trackDuration * seed);
+    setBarPosition(`${trackDuration * seed}%`);
+  }
 
   function handleProgressBarClick(e) {
     const progressBarWidth = e.currentTarget.getBoundingClientRect().width;
     const progressBarLeftPos = e.currentTarget.getBoundingClientRect().left;
-
     const mouseCoordinateX = -(progressBarLeftPos - e.pageX); // координата клика мыши на прогресcбаре.
     // Тк она pageX считается от окна, а нам нужно от ширины прогрессбара,
     // то от левой позиции прогр - бара(она тоже от окна считается) отнимаем pageX и меняем знак на +
-    const mouseCoordinateXpersents = mouseCoordinateX / progressBarWidth * 100;
+    const mouseCoordinateXpersents = mouseCoordinateX / progressBarWidth;
 
     if (e.currentTarget === e.target) {
-      lengthSwitcher.current.style.left = `${mouseCoordinateXpersents}%`;
+      setBarPosition(`${mouseCoordinateXpersents * 100}%`);
+
+      rewindTrack(mouseCoordinateXpersents);
     }
   }
 
@@ -71,10 +78,10 @@ function PlayerControls({
         </button>
       </div>
       <div className={cn(progressControls)}>
-        <div className={cn(timer, timerLength)}>00:00</div>
-        <div className={cn(timer, timerCurrent)}>04:00</div>
+        <div className={cn(timer, timerLength)}>{currentTime}</div>
+        <div className={cn(timer, timerCurrent)}>{trackDuration}</div>
         <div className={cn(progressBar)} ref={progressBarRef} onClick={handleProgressBarClick}>
-          <span ref={lengthSwitcher}></span>
+          <span ref={lengthSwitcher} style={{ left: barPosition }}></span>
         </div>
       </div>
       <div className={cn(mainControls)}>

@@ -20,10 +20,12 @@ function Player({
   const [isLoopTrack, setIsLoopTrack] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [trackDuration, setTrackDuration] = useState(0);
+  const [newCurrentTime, setNewCurrentTime] = useState(null);
 
-  // console.log('isLoopTrack:', isLoopTrack);
+  console.log('currentTime:', currentTime);
+  console.log('newCurrentTime:', newCurrentTime);
 
-  // console.log('audioEl.current.duration:', audioEl.current.duration);
+  // console.log('currentTime player:', currentTime);
 
   // loop status checking
   useEffect(() => {
@@ -32,27 +34,19 @@ function Player({
 
   useEffect(() => {
     if (isPlaying) {
-      audioEl.current.play()
+      audioEl.current
+        .play()
         .then()
         .catch((err) => console.log('playing err:', err));
     } else {
       audioEl.current.pause();
     }
-  });
+  }, [isPlaying]);
 
-  // timer
+  // upd time of an active track
   useEffect(() => {
-    console.log('currentTime:', audioEl.current.currentTime);
-    console.log('trackDuration:', trackDuration);
-
-    // if (isPlaying) {
-    // setTimeout(() => {
-    //   setCurrentTime(Number.parseInt(audioEl.current.currentTime, 10));
-    //   console.log('currentTime:', audioEl.current.currentTime);
-    //   console.log('trackDuration:', trackDuration);
-    // }, 1000);
-    // }
-  });
+    audioEl.current.currentTime = newCurrentTime;
+  }, [newCurrentTime]);
 
   function skipSong(forwards = true) {
     // when next song
@@ -88,14 +82,15 @@ function Player({
 
   return (
     <div className={b()}>
-      <audio ref={audioEl} src={currentSong.src} preload="metadata" onEnded={loopTrack} onTimeUpdate={(e) => {
-        setCurrentTime(e.target.currentTime);
-        // console.log('onTimeUpdate e:', e);
-        // console.log('current time:', e.target.currentTime);
-        // console.log('duretion:', e.target.duration);
-      }} onLoadedMetadata={(e) => {
-        setTrackDuration(e.target.duration);
-      }}></audio>
+      <audio ref={audioEl} src={currentSong.src} preload="metadata"
+        onEnded={loopTrack}
+        onTimeUpdate={(e) => {
+          setCurrentTime(e.target.currentTime);
+        }}
+        onLoadedMetadata={(e) => {
+          setTrackDuration(e.target.duration);
+        }}>
+      </audio>
       <h4>Playing now</h4>
       <PlayerDetails
         song={currentSong}
@@ -106,6 +101,10 @@ function Player({
         skipSong={skipSong}
         isLoopTrack={isLoopTrack}
         setIsLoopTrack={setIsLoopTrack}
+        trackDuration={trackDuration}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        setNewCurrentTime={setNewCurrentTime}
       />
       <p><strong>Next up: </strong>{nextSong.title} by {nextSong.artist}</p>
     </div>
