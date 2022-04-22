@@ -22,6 +22,10 @@ So I decided to make my own player app that can convert youtube music videos to 
 ### Styles:
 - [ ] good-looking styles
 - [ ] cross-browser and adaptive layouts
+### Bugs to solve:
+- [x] Safari block playing after skip track (but [autoplay policy error is instead but with no valuent effect](https://developer.chrome.com/blog/autoplay/))
+- [ ] progressbar freezes and may get left >100% and fly beyond the borders of its block
+- [ ] prevent the ability of pushing skip track buttons from uncountable pushing after pushing to keep better UX
 
 ## Dependencies
 - [x] `ESlint` and airbnb style-guide
@@ -33,7 +37,7 @@ So I decided to make my own player app that can convert youtube music videos to 
 
 ## Libs
 - [x] [fontawesome for player icons](https://fontawesome.com/v5/docs/web/use-with/react)
-- [x] [bem-css-modules for css bem-style](https://www.npmjs.com/package/bem-css-modules)
+- [x] [classnames](https://www.npmjs.com/package/classnames)
 - [ ] [ytdl-core for video to audio converting (backend)](https://www.npmjs.com/package/ytdl-core)
 
 <br />
