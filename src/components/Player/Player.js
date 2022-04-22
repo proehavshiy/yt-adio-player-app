@@ -21,9 +21,17 @@ function Player({
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoopTrack, setIsLoopTrack] = useState(false);
+  const [isNextTrackRandom, setIsNextTrackRandom] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [trackDuration, setTrackDuration] = useState(0);
   const [newCurrentTime, setNewCurrentTime] = useState(null);
+
+  useEffect(() => {
+    console.log('isNextTrackRandom:', isNextTrackRandom);
+  }, [isNextTrackRandom]);
+  useEffect(() => {
+    console.log('isLoopTrack:', isLoopTrack);
+  }, [isLoopTrack]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -41,21 +49,44 @@ function Player({
     audioEl.current.currentTime = newCurrentTime;
   }, [newCurrentTime]);
 
+  function getRandomNextSong(max, exclude) {
+    const getRandom = () => Math.floor(Math.random() * max);
+    const randomInt = getRandom();
+
+    return exclude.indexOf(randomInt) === -1 ? randomInt : getRandomNextSong(max, exclude);
+  }
+
   function skipSong(forwards = true) {
     // when next song
     if (forwards) {
       setCurrentSongIndex(() => {
         let temp = currentSongIndex;
-        temp += 1;
-        if (temp > songs.length - 1) temp = 0;
+        // random track mode
+        switch (isNextTrackRandom) {
+          case true:
+            temp = getRandomNextSong(songs.length - 1, [currentSongIndex]);
+            break;
+          case false:
+          default:
+            temp += 1;
+            if (temp > songs.length - 1) temp = 0;
+        }
         return temp;
       });
       // when previous song
     } else {
       setCurrentSongIndex(() => {
         let temp = currentSongIndex;
-        temp -= 1;
-        if (temp < 0) temp = songs.length - 1;
+        // random track mode
+        switch (isNextTrackRandom) {
+          case true:
+            temp = getRandomNextSong(songs.length - 1, [currentSongIndex]);
+            break;
+          case false:
+          default:
+            temp -= 1;
+            if (temp < 0) temp = songs.length - 1;
+        }
         return temp;
       });
     }
@@ -71,7 +102,7 @@ function Player({
   }
 
   const currentSong = songs[currentSongIndex];
-  const nextSong = songs[nextSongIndex];
+  const nextSong = isNextTrackRandom ? 'random mode' : `${songs[nextSongIndex].title} - ${songs[nextSongIndex].artist}`;
 
   return (
     <div className={b()}>
@@ -104,12 +135,14 @@ function Player({
         skipSong={skipSong}
         isLoopTrack={isLoopTrack}
         setIsLoopTrack={setIsLoopTrack}
+        isNextTrackRandom={isNextTrackRandom}
+        setIsNextTrackRandom={setIsNextTrackRandom}
         trackDuration={trackDuration}
         currentTime={currentTime}
         setCurrentTime={setCurrentTime}
         setNewCurrentTime={setNewCurrentTime}
       />
-      <p><strong>Next up: </strong>{nextSong.title} by {nextSong.artist}</p>
+      <p><strong>Next up: </strong>{nextSong}</p>
     </div>
   );
 }

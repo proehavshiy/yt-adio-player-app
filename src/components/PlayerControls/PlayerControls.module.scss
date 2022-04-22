@@ -96,6 +96,13 @@
 
 // * buttons
 
+.activeBtn {
+  & * {
+    transition: all .3s ease;
+    fill: #FFFFFF;
+  }
+}
+
 // volumeBtn
 .volumeBtn {
   background-color: transparent;
