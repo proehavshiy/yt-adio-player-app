@@ -11,9 +11,10 @@ So I decided to make my own player app that can convert youtube music videos to 
 - [x] skip tracks
 - [ ] volume changer
 - [x] autoplay next track after ending of a current track
-- [x] track duration path
+- [x] progressbar
+- [ ] progressbar drag n drop
 - [x] loop track button
-- [ ] random order button
+- [x] random order button
 ### Playlist functionality:
 - [ ] input for youtube videos links 
 - [ ] video to audio converter
@@ -25,6 +26,7 @@ So I decided to make my own player app that can convert youtube music videos to 
 ## Dependencies
 - [x] `ESlint` and airbnb style-guide
 - [x] `SASS` and `CSS Modules`
+- [ ] `classnames` for classes
 - [ ] `Redux` for state management 
 
 <br />
