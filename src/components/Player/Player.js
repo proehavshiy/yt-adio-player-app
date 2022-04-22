@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-dynamic-require */
@@ -79,11 +80,19 @@ function Player({
           setCurrentTime(e.target.currentTime);
         }}
         onEnded={() => {
+          // checking looping mode when track was ended
           loopTrack();
         }}
         onLoadedMetadata={(e) => {
+          // get the duration of current track before rendering
           setTrackDuration(e.target.duration);
-        }}>
+        }}
+        onEmptied={() => {
+          // это исправляет баг в сафари, когда он блокирует установку audio.currentTime = 0
+          // до взаимодейтвия пользователя и позволяет не блокировать проигрывание после смены трека по кнопке
+          audioEl.current.play();
+        }}
+      >
       </audio>
       <h4>Playing now</h4>
       <PlayerDetails

@@ -24,8 +24,6 @@ const {
   timer, timerLength, timerCurrent,
 } = styles;
 
-console.log('styles:', styles);
-
 function PlayerControls({
   isPlaying, setIsPlaying, skipSong, isLoopTrack, setIsLoopTrack, trackDuration, currentTime, setNewCurrentTime,
 }) {
