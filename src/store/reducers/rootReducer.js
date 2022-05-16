@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import trackReducer from './trackReducer';
 
 const rootReducer = combineReducers({
-  tracks: trackReducer,
+  data: trackReducer,
 });
 
 export default rootReducer;

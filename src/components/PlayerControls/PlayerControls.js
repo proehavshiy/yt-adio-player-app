@@ -14,6 +14,7 @@ import {
 // import { ReactComponent as loopIcon } from '../../img/repeat.svg';
 import classNames from 'classnames/bind';
 import { connect, useSelector, useDispatch } from 'react-redux';
+import { nextTrack, prevTrack } from '../../store/actionCreators/actionCreator';
 import styles from './PlayerControls.module.scss';
 
 const cn = classNames.bind(styles);
@@ -73,6 +74,8 @@ function PlayerControls({
     return format();
   }
 
+  const dispatch = useDispatch();
+
   return (
     <div className={cn(controls)}>
       <div className={cn(sideControls)}>
@@ -102,13 +105,19 @@ function PlayerControls({
         </div>
       </div>
       <div className={cn(mainControls)}>
-        <button className={cn(skipBtn)} onClick={() => skipSong(false)}>
+        <button className={cn(skipBtn)}
+          // onClick={() => skipSong(false)}
+          onClick={() => dispatch(prevTrack())}
+        >
           <FontAwesomeIcon icon={faBackward} />
         </button>
         <button className={cn(playBtn)} onClick={() => setIsPlaying(!isPlaying)}>
           <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
         </button>
-        <button className={cn(skipBtn)} onClick={() => skipSong(true)}>
+        <button className={cn(skipBtn)}
+          // onClick={() => skipSong(true)}
+          onClick={() => dispatch(nextTrack())}
+        >
           <FontAwesomeIcon icon={faForward} />
         </button>
       </div>

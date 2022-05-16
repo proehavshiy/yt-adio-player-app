@@ -33,7 +33,7 @@ function App({ tracks }) {
 
 function mapStateToProps(state) {
   return {
-    tracks: state.tracks,
+    tracks: state.data.tracks,
   };
 }
 

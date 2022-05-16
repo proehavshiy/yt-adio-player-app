@@ -7,6 +7,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react';
 import block from 'bem-css-modules';
+import { connect } from 'react-redux';
 import PlayerDetails from '../PlayerDetails/PlayerDetails';
 import PlayerControls from '../PlayerControls/PlayerControls';
 import styles from './Player.module.scss';
@@ -16,7 +17,7 @@ const b = block(styles);
 // "homepage": "https://proehavshiy.github.io/yt-adio-player-app",
 
 function Player({
-  currentSongIndex, setCurrentSongIndex, nextSongIndex, songs,
+  currentSongIndex, setCurrentSongIndex, nextSongIndex, songs, tracks, currIndex,
 }) {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -101,7 +102,7 @@ function Player({
     }
   }
 
-  const currentSong = songs[currentSongIndex];
+  const currentSong = tracks[currIndex];
   const nextSong = isNextTrackRandom ? 'random mode' : `${songs[nextSongIndex].title} - ${songs[nextSongIndex].artist}`;
 
   return (
@@ -147,4 +148,11 @@ function Player({
   );
 }
 
-export default Player;
+function mapStateToProps(state) {
+  return {
+    currIndex: state.data.currIndex,
+    tracks: state.data.tracks,
+  };
+}
+
+export default connect(mapStateToProps)(Player);

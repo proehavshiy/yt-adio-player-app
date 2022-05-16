@@ -1,4 +1,4 @@
-const INCREMENT = 'INCREMENT';
-const DECREMENT = 'DECREMENT';
+const TRACK_NEXT = 'TRACK/NEXT';
+const TRACK_PREV = 'TRACK/PREV';
 
-export default { INCREMENT, DECREMENT };
+export { TRACK_NEXT, TRACK_PREV };
