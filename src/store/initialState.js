@@ -46,6 +46,10 @@ const tracksInitialState = {
 const modeInitialState = {
   isRandomMode: false,
   isLoopedTrack: false,
+  currTrackData: {
+    trackDuration: 0,
+    currentTime: 0,
+  },
 };
 
 export { tracksInitialState, modeInitialState };

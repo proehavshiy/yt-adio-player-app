@@ -1,12 +1,18 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable no-multi-assign */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-else-return */
 /* eslint-disable default-case */
 /* eslint-disable no-unused-vars */
 /* eslint-disable default-param-last */
 import { modeInitialState } from '../initialState';
-import { MODE_RANDOM, MODE_LOOP } from '../actions/actions';
+import {
+  MODE_RANDOM, MODE_LOOP, MODE_TRACK_DURATION, MODE_TRACK_CURRENT_TIME,
+} from '../actions/actions';
 
 function modeReducer(state = modeInitialState, action) {
-  const { type } = action;
+  const { type, duration, currentTime } = action;
   switch (type) {
     case MODE_RANDOM:
       return {
@@ -17,6 +23,22 @@ function modeReducer(state = modeInitialState, action) {
       return {
         ...state,
         isLoopedTrack: !state.isLoopedTrack,
+      };
+    case MODE_TRACK_DURATION:
+      return {
+        ...state,
+        currTrackData: {
+          ...state.currTrackData,
+          trackDuration: duration,
+        },
+      };
+    case MODE_TRACK_CURRENT_TIME:
+      return {
+        ...state,
+        currTrackData: {
+          ...state.currTrackData,
+          currentTime,
+        },
       };
     default:
       return state;

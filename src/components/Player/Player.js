@@ -5,14 +5,18 @@
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState, useEffect, useRef, useMemo, useCallback,
+} from 'react';
 import block from 'bem-css-modules';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import PlayerDetails from '../PlayerDetails/PlayerDetails';
 import PlayerControls from '../PlayerControls/PlayerControls';
 import styles from './Player.module.scss';
 
-import { nextTrack, nextTrackInSequence } from '../../store/actionCreators/actionCreator';
+import {
+  nextTrack, nextTrackInSequence, setTrackDuration, setCurrentTrackTime,
+} from '../../store/actionCreators/actionCreator';
 
 const b = block(styles);
 
@@ -23,18 +27,16 @@ function Player({
 }) {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoopTrack, setIsLoopTrack] = useState(false);
-  const [isNextTrackRandom, setIsNextTrackRandom] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [trackDuration, setTrackDuration] = useState(0);
-  const [newCurrentTime, setNewCurrentTime] = useState(null);
 
-  useEffect(() => {
-    console.log('isNextTrackRandom:', isNextTrackRandom);
-  }, [isNextTrackRandom]);
-  useEffect(() => {
-    console.log('isLoopTrack:', isLoopTrack);
-  }, [isLoopTrack]);
+  const [isRewindTrack, setIsRewindTrack] = useState(null);
+
+  const currentTrackTime = useSelector((state) => state.mode.currTrackData.currentTime);
+  const trackDuration = useSelector((state) => state.mode.currTrackData.trackDuration);
+
+  const changingModeState = useSelector((state) => state.mode.isRandomMode);
+  const isLoopedTrack = useSelector((state) => state.mode.isLoopedTrack);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isPlaying) {
@@ -45,17 +47,14 @@ function Player({
     } else {
       audioEl.current.pause();
     }
-  }, [isPlaying, currentTime]);
+  }, [isPlaying, currentTrackTime]);
 
   // upd time of an active track
+  // we use here isRewindTrack as a dependance
+  // its a flag when we need to update current track time in player without unnecesarily rerenders of a Player component
   useEffect(() => {
-    audioEl.current.currentTime = newCurrentTime;
-  }, [newCurrentTime]);
-
-  const dispatch = useDispatch();
-
-  const changingModeState = useSelector((state) => state.mode.isRandomMode);
-  const isLoopedTrack = useSelector((state) => state.mode.isLoopedTrack);
+    audioEl.current.currentTime = currentTrackTime;
+  }, [isRewindTrack]);
 
   function loopTrack() {
     if (isLoopedTrack) {
@@ -73,7 +72,8 @@ function Player({
     <div className={b()}>
       <audio ref={audioEl} src={currentSong.src} preload="metadata"
         onTimeUpdate={(e) => {
-          setCurrentTime(e.target.currentTime);
+          // setCurrentTime(e.target.currentTime);
+          dispatch(setCurrentTrackTime(e.target.currentTime));
         }}
         onEnded={() => {
           // checking looping mode when track was ended
@@ -81,7 +81,7 @@ function Player({
         }}
         onLoadedMetadata={(e) => {
           // get the duration of current track before rendering
-          setTrackDuration(e.target.duration);
+          dispatch(setTrackDuration(e.target.duration));
         }}
         onEmptied={() => {
           // это исправляет баг в сафари, когда он блокирует установку audio.currentTime = 0
@@ -97,15 +97,7 @@ function Player({
       <PlayerControls
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
-        // skipSong={skipSong}
-        isLoopTrack={isLoopTrack}
-        setIsLoopTrack={setIsLoopTrack}
-        isNextTrackRandom={isNextTrackRandom}
-        setIsNextTrackRandom={setIsNextTrackRandom}
-        trackDuration={trackDuration}
-        currentTime={currentTime}
-        setCurrentTime={setCurrentTime}
-        setNewCurrentTime={setNewCurrentTime}
+        setIsRewindTrack={setIsRewindTrack}
       />
       <p><strong>Next up: </strong>{nextSong}</p>
     </div>

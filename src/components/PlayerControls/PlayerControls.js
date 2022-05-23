@@ -13,9 +13,9 @@ import {
 // import block from 'bem-css-modules';
 // import { ReactComponent as loopIcon } from '../../img/repeat.svg';
 import classNames from 'classnames/bind';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
-  nextTrack, prevTrack, nextTrackInSequence, switchChangingTrackMode, switchLoopTrackMode,
+  nextTrack, prevTrack, nextTrackInSequence, switchChangingTrackMode, switchLoopTrackMode, setCurrentTrackTime,
 } from '../../store/actionCreators/actionCreator';
 import styles from './PlayerControls.module.scss';
 
@@ -29,19 +29,27 @@ const {
 } = styles;
 
 function PlayerControls({
-  isPlaying, setIsPlaying, skipSong, isLoopTrack, setIsLoopTrack, isNextTrackRandom, setIsNextTrackRandom, trackDuration, currentTime, setNewCurrentTime, counter, increment, decrement,
+  isPlaying, setIsPlaying, setIsRewindTrack,
 }) {
   const progressBarRef = createRef(null);
   const lengthSwitcher = createRef(null);
   const [barPosition, setBarPosition] = useState(null);
 
+  const dispatch = useDispatch();
+  const isRandomMode = useSelector((state) => state.mode.isRandomMode);
+  const isLoopedTrack = useSelector((state) => state.mode.isLoopedTrack);
+
+  const currentTrackTime = useSelector((state) => state.mode.currTrackData.currentTime);
+  const trackDuration = useSelector((state) => state.mode.currTrackData.trackDuration);
+
   useEffect(() => {
-    const currentDuration = `${currentTime / trackDuration * 100}%`;
+    const currentDuration = `${currentTrackTime / trackDuration * 100}%`;
     setBarPosition(currentDuration);
-  }, [currentTime]);
+  }, [currentTrackTime]);
 
   function rewindTrack(seed) {
-    setNewCurrentTime(trackDuration * seed);
+    dispatch(setCurrentTrackTime(trackDuration * seed));
+    setIsRewindTrack(trackDuration * seed); // its a flag when we need to update current track time in player without unnecesarily rerenders of a Player component
     setBarPosition(`${trackDuration * seed}%`);
   }
 
@@ -76,10 +84,6 @@ function PlayerControls({
     return format();
   }
 
-  const dispatch = useDispatch();
-  const changingModeState = useSelector((state) => state.mode.isRandomMode);
-  const isLoopedTrack = useSelector((state) => state.mode.isLoopedTrack);
-
   return (
     <div className={cn(controls)}>
       <div className={cn(sideControls)}>
@@ -89,16 +93,16 @@ function PlayerControls({
             <path d="M5.4628 14.2166L5.84848 13.5734L5.67042 13.4666H5.4628V14.2166ZM5.4628 6.22185V6.97185H5.67042L5.84848 6.86508L5.4628 6.22185ZM12.1295 2.22446H12.8795C12.8795 1.95429 12.7342 1.705 12.4991 1.57186C12.264 1.43872 11.9755 1.44229 11.7438 1.58123L12.1295 2.22446ZM12.1295 18.214L11.7438 18.8573C11.9755 18.9962 12.264 18.9998 12.4991 18.8666C12.7342 18.7335 12.8795 18.4842 12.8795 18.214H12.1295ZM5.4628 13.4666H2.79613V14.9666H5.4628V13.4666ZM2.79613 13.4666C2.47339 13.4666 2.2128 13.2059 2.2128 12.8842H0.712795C0.712795 14.0362 1.64686 14.9666 2.79613 14.9666V13.4666ZM2.2128 12.8842V7.55431H0.712795V12.8842H2.2128ZM2.2128 7.55431C2.2128 7.23262 2.47339 6.97185 2.79613 6.97185V5.47185C1.64686 5.47185 0.712795 6.4023 0.712795 7.55431H2.2128ZM2.79613 6.97185H5.4628V5.47185H2.79613V6.97185ZM5.84848 6.86508L12.5151 2.86769L11.7438 1.58123L5.07711 5.57862L5.84848 6.86508ZM11.3795 2.22446V18.214H12.8795V2.22446H11.3795ZM12.5151 17.5708L5.84848 13.5734L5.07711 14.8599L11.7438 18.8573L12.5151 17.5708ZM14.0461 8.22446V12.2245H15.5461V8.22446H14.0461Z" fill="#8996B8" fill-opacity="0.6" />
           </svg>
         </button>
-        <button className={cn(loopBtn, { activeBtn: isLoopTrack })}
+        <button className={cn(loopBtn, { activeBtn: isLoopedTrack })}
           onClick={() => dispatch(switchLoopTrackMode(!isLoopedTrack))}
         >
           <svg width="100%" height="100%" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6.02802 6.08709H14.3614V7.57875C14.3614 7.95375 14.8114 8.13709 15.0697 7.87042L17.3947 5.54542C17.5614 5.37875 17.5614 5.12042 17.3947 4.95375L15.0697 2.62875C15.0109 2.57117 14.9365 2.53226 14.8556 2.51693C14.7748 2.50161 14.6913 2.51055 14.6155 2.54263C14.5398 2.57471 14.4752 2.6285 14.43 2.69721C14.3847 2.76593 14.3609 2.84649 14.3614 2.92875V4.42042H5.19469C4.73636 4.42042 4.36136 4.79542 4.36136 5.25375V8.58709C4.36136 9.04542 4.73636 9.42042 5.19469 9.42042C5.65302 9.42042 6.02802 9.04542 6.02802 8.58709V6.08709ZM14.3614 14.4204H6.02802V12.9288C6.02802 12.5538 5.57802 12.3704 5.31969 12.6371L2.99469 14.9621C2.82802 15.1288 2.82802 15.3871 2.99469 15.5538L5.31969 17.8788C5.37844 17.9363 5.45291 17.9752 5.53374 17.9906C5.61456 18.0059 5.69811 17.997 5.77386 17.9649C5.84961 17.9328 5.91417 17.879 5.9594 17.8103C6.00463 17.7416 6.02851 17.661 6.02802 17.5788V16.0871H15.1947C15.653 16.0871 16.028 15.7121 16.028 15.2538V11.9204C16.028 11.4621 15.653 11.0871 15.1947 11.0871C14.7364 11.0871 14.3614 11.4621 14.3614 11.9204V14.4204Z" fill="#8996B8" fill-opacity="0.6" />
           </svg>
         </button>
-        <button className={cn(orderBtn, { activeBtn: isNextTrackRandom })}
+        <button className={cn(orderBtn, { activeBtn: isRandomMode })}
           onClick={() => {
-            dispatch(switchChangingTrackMode(!changingModeState));
+            dispatch(switchChangingTrackMode(!isRandomMode));
           }}
         >
           <svg width="100%" height="100%" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +112,7 @@ function PlayerControls({
         </button>
       </div>
       <div className={cn(progressControls)}>
-        <div className={cn(timer, timerLength)}>{formatTime(currentTime)}</div>
+        <div className={cn(timer, timerLength)}>{formatTime(currentTrackTime)}</div>
         <div className={cn(timer, timerCurrent)}>{formatTime(trackDuration)}</div>
         <div className={cn(progressBar)} ref={progressBarRef} onClick={handleProgressBarClick}>
           <span ref={lengthSwitcher} style={{ left: barPosition }}></span>
@@ -117,7 +121,7 @@ function PlayerControls({
       <div className={cn(mainControls)}>
         <button className={cn(skipBtn)}
           onClick={() => {
-            dispatch(prevTrack(changingModeState));
+            dispatch(prevTrack(isRandomMode));
             dispatch(nextTrackInSequence());
           }}
         >
@@ -128,7 +132,7 @@ function PlayerControls({
         </button>
         <button className={cn(skipBtn)}
           onClick={() => {
-            dispatch(nextTrack(changingModeState));
+            dispatch(nextTrack(isRandomMode));
             dispatch(nextTrackInSequence());
           }}
         >
