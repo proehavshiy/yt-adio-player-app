@@ -17,7 +17,7 @@ const b = block(styles);
 // "homepage": "https://proehavshiy.github.io/yt-adio-player-app",
 
 function Player({
-  currentSongIndex, setCurrentSongIndex, nextSongIndex, songs, tracks, currIndex,
+  songs, tracks, currIndex, nextIndex, randomMode,
 }) {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -50,60 +50,17 @@ function Player({
     audioEl.current.currentTime = newCurrentTime;
   }, [newCurrentTime]);
 
-  function getRandomNextSong(max, exclude) {
-    const getRandom = () => Math.floor(Math.random() * max);
-    const randomInt = getRandom();
-
-    return exclude.indexOf(randomInt) === -1 ? randomInt : getRandomNextSong(max, exclude);
-  }
-
-  function skipSong(forwards = true) {
-    // when next song
-    if (forwards) {
-      setCurrentSongIndex(() => {
-        let temp = currentSongIndex;
-        // random track mode
-        switch (isNextTrackRandom) {
-          case true:
-            temp = getRandomNextSong(songs.length - 1, [currentSongIndex]);
-            break;
-          case false:
-          default:
-            temp += 1;
-            if (temp > songs.length - 1) temp = 0;
-        }
-        return temp;
-      });
-      // when previous song
-    } else {
-      setCurrentSongIndex(() => {
-        let temp = currentSongIndex;
-        // random track mode
-        switch (isNextTrackRandom) {
-          case true:
-            temp = getRandomNextSong(songs.length - 1, [currentSongIndex]);
-            break;
-          case false:
-          default:
-            temp -= 1;
-            if (temp < 0) temp = songs.length - 1;
-        }
-        return temp;
-      });
-    }
-  }
-
   function loopTrack() {
     if (isLoopTrack) {
       audioEl.current.currentTime = 0;
     } else {
-      skipSong(true);
+      // skipSong(true);
       audioEl.current.currentTime = 0;
     }
   }
 
   const currentSong = tracks[currIndex];
-  const nextSong = isNextTrackRandom ? 'random mode' : `${songs[nextSongIndex].title} - ${songs[nextSongIndex].artist}`;
+  const nextSong = randomMode ? 'random mode' : `${tracks[nextIndex].title} - ${tracks[nextIndex].artist}`;
 
   return (
     <div className={b()}>
@@ -133,7 +90,7 @@ function Player({
       <PlayerControls
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
-        skipSong={skipSong}
+        // skipSong={skipSong}
         isLoopTrack={isLoopTrack}
         setIsLoopTrack={setIsLoopTrack}
         isNextTrackRandom={isNextTrackRandom}
@@ -152,6 +109,8 @@ function mapStateToProps(state) {
   return {
     currIndex: state.data.currIndex,
     tracks: state.data.tracks,
+    nextIndex: state.data.nextIndexInSequence,
+    randomMode: state.mode.isRandomMode,
   };
 }
 

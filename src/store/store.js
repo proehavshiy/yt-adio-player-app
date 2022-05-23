@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from '@redux-devtools/extension';
 import logger from 'redux-logger';
@@ -9,5 +10,7 @@ const store = createStore(
     applyMiddleware(logger),
   ),
 );
+
+console.log('store:', store.getState());
 
 export default store;

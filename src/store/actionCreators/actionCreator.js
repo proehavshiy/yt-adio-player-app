@@ -1,18 +1,37 @@
-import { TRACK_NEXT, TRACK_PREV } from '../actions/actions';
+/* eslint-disable object-shorthand */
+import {
+  TRACK_NEXT, TRACK_PREV, TRACK_NEXT_IN_SEQUENCE, MODE_RANDOM,
+} from '../actions/actions';
 
-function nextTrack() {
+function nextTrack(isRandom = false) {
   return {
     type: TRACK_NEXT,
+    isRandom: isRandom,
   };
 }
 
-function prevTrack() {
+function prevTrack(isRandom = false) {
   return {
     type: TRACK_PREV,
+    isRandom: isRandom,
   };
 }
 
-export { nextTrack, prevTrack };
+function nextTrackInSequence() {
+  return {
+    type: TRACK_NEXT_IN_SEQUENCE,
+  };
+}
+
+function switchChangingTrackMode() {
+  return {
+    type: MODE_RANDOM,
+  };
+}
+
+export {
+  nextTrack, prevTrack, nextTrackInSequence, switchChangingTrackMode,
+};
 
 // export function incrementCounter(payload) {
 //   return {

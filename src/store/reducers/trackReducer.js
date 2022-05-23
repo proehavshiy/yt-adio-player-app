@@ -1,53 +1,25 @@
-/* eslint-disable default-case */
-/* eslint-disable no-unused-vars */
-/* eslint-disable default-param-last */
-import initialState from '../initialState';
-import { TRACK_NEXT, TRACK_PREV } from '../actions/actions';
+import { tracksInitialState } from '../initialState';
+import { TRACK_NEXT, TRACK_PREV, TRACK_NEXT_IN_SEQUENCE } from '../actions/actions';
+import getRandomNextSong from '../../utils/getRandomNextSong';
+import getNextVal from '../../utils/getNextVal';
 
-function trackReducer(state = initialState, action) {
-  switch (action.type) {
+function trackReducer(state = tracksInitialState, action) {
+  const { type, isRandom } = action;
+
+  switch (type) {
     case TRACK_NEXT:
-      if (state.currIndex === state.tracks.length - 1) {
-        return {
-          ...state,
-          currIndex: 0,
-        };
-      }
-      return {
-        ...state,
-        currIndex: state.currIndex + 1,
-      };
+      if (isRandom) return getRandomNextSong(state, 'currIndex');
+      return getNextVal(state, 'currIndex');
+
     case TRACK_PREV:
-      if (state.currIndex === 0) {
-        return {
-          ...state,
-          currIndex: state.tracks.length - 1,
-        };
-      }
-      return {
-        ...state,
-        currIndex: state.currIndex - 1,
-      };
+      if (isRandom) return getRandomNextSong(state, 'currIndex');
+      return getNextVal(state, 'currIndex', false);
+
+    case TRACK_NEXT_IN_SEQUENCE:
+      return getNextVal(state, 'nextIndexInSequence');
     default:
       return state;
   }
 }
 
 export default trackReducer;
-
-// function counterReducer(state = initialValue, action) {
-//   switch (action.type) {
-//     case INCREMENT:
-//       return {
-//         ...state,
-//         value: state.value + action.payload,
-//       };
-//     case DECREMENT:
-//       return {
-//         ...state,
-//         value: state.value - action.payload,
-//       };
-//     default:
-//       return state;
-//   }
-// }
