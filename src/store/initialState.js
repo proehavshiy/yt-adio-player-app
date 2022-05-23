@@ -43,6 +43,9 @@ const tracksInitialState = {
   nextIndexInSequence: 1,
 };
 
-const randomModeInitialState = { isRandomMode: false };
+const modeInitialState = {
+  isRandomMode: false,
+  isLoopedTrack: false,
+};
 
-export { tracksInitialState, randomModeInitialState };
+export { tracksInitialState, modeInitialState };

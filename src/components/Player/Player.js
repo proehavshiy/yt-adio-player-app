@@ -7,10 +7,12 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react';
 import block from 'bem-css-modules';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import PlayerDetails from '../PlayerDetails/PlayerDetails';
 import PlayerControls from '../PlayerControls/PlayerControls';
 import styles from './Player.module.scss';
+
+import { nextTrack, nextTrackInSequence } from '../../store/actionCreators/actionCreator';
 
 const b = block(styles);
 
@@ -50,12 +52,17 @@ function Player({
     audioEl.current.currentTime = newCurrentTime;
   }, [newCurrentTime]);
 
+  const dispatch = useDispatch();
+
+  const changingModeState = useSelector((state) => state.mode.isRandomMode);
+  const isLoopedTrack = useSelector((state) => state.mode.isLoopedTrack);
+
   function loopTrack() {
-    if (isLoopTrack) {
+    if (isLoopedTrack) {
       audioEl.current.currentTime = 0;
     } else {
-      // skipSong(true);
-      audioEl.current.currentTime = 0;
+      dispatch(nextTrack(changingModeState));
+      dispatch(nextTrackInSequence());
     }
   }
 
