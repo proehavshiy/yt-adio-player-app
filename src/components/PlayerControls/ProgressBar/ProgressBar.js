@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-shadow */
 /* eslint-disable max-len */
@@ -107,6 +108,36 @@ function ProgressBar({ setIsRewindTrack }) {
     document.addEventListener('mouseup', onMouseUp);
   }
 
+  // mobile drag n drop touch API
+
+  function onTouchStart(e) {
+    const switcherEl = lengthSwitcher.current;
+    switcherEl.style.transition = 'none';
+  }
+  function onTouchMove(e) {
+    const touchLocation = e.targetTouches[0];
+    const touchX = touchLocation.clientX;
+
+    const barEl = progressBarRef.current;
+
+    const coords = barEl.getBoundingClientRect();
+    const barElWidth = coords.width;
+    const barElLeft = coords.left;
+
+    let touchBarPosX = (touchX - barElLeft) / barElWidth;
+
+    // чтобы ползунок не выходил за границы прогресс бара
+    if (touchBarPosX > 1) {
+      touchBarPosX = 1;
+    }
+    if (touchBarPosX < 0) {
+      touchBarPosX = 0;
+    }
+
+    setBarPosition(`${touchBarPosX * 100}%`);
+    rewindTrack(touchBarPosX);
+  }
+
   return (
     <div className={cn(progressBar)}
       ref={progressBarRef}
@@ -116,6 +147,8 @@ function ProgressBar({ setIsRewindTrack }) {
         style={{ left: barPosition }}
         onMouseDown={onMouseDown}
         onDragStart={() => false}
+        onTouchMove={onTouchMove}
+        onTouchStart={onTouchStart}
       ></span>
     </div>
   );

@@ -17,24 +17,6 @@ const tracks = [
     img_src: './img/pexels-viktoria-alipatova-9176859.jpg',
     src: './music/ZakharValaha - Price of Freedom.mp3',
   },
-  {
-    title: '3',
-    artist: '3',
-    img_src: './img/pexels-viktoria-alipatova-9176859.jpg',
-    src: './music/ZakharValaha - Price of Freedom.mp3',
-  },
-  {
-    title: '4',
-    artist: '4',
-    img_src: './img/pexels-viktoria-alipatova-9176859.jpg',
-    src: './music/ZakharValaha - Price of Freedom.mp3',
-  },
-  {
-    title: '5',
-    artist: '5',
-    img_src: './img/pexels-viktoria-alipatova-9176859.jpg',
-    src: './music/ZakharValaha - Price of Freedom.mp3',
-  },
 ];
 
 const tracksInitialState = {
