@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-mixed-operators */
@@ -14,6 +15,7 @@ import {
 // import { ReactComponent as loopIcon } from '../../img/repeat.svg';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
+import formatTime from '../../utils/formatTime';
 import {
   nextTrack, prevTrack, nextTrackInSequence, switchChangingTrackMode, switchLoopTrackMode, setCurrentTrackTime,
 } from '../../store/actionCreators/actionCreator';
@@ -42,21 +44,39 @@ function PlayerControls({
   const currentTrackTime = useSelector((state) => state.mode.currTrackData.currentTime);
   const trackDuration = useSelector((state) => state.mode.currTrackData.trackDuration);
 
+  // обновление положения ползунка при клике
   useEffect(() => {
     const currentDuration = `${currentTrackTime / trackDuration * 100}%`;
     setBarPosition(currentDuration);
   }, [currentTrackTime]);
 
+  // перемотка трека
   function rewindTrack(seed) {
     dispatch(setCurrentTrackTime(trackDuration * seed));
     setIsRewindTrack(trackDuration * seed); // its a flag when we need to update current track time in player without unnecesarily rerenders of a Player component
     setBarPosition(`${trackDuration * seed}%`);
   }
 
+  // клик по прогресс бару
   function handleProgressBarClick(e) {
-    const progressBarWidth = e.currentTarget.getBoundingClientRect().width;
-    const progressBarLeftPos = e.currentTarget.getBoundingClientRect().left;
-    const mouseCoordinateX = -(progressBarLeftPos - e.pageX); // координата клика мыши на прогресcбаре.
+    const progressBarEl = progressBarRef.current;
+    const switcherEl = lengthSwitcher.current;
+
+    const coords = progressBarEl.getBoundingClientRect();
+    console.log('progressBarEl:', progressBarEl);
+    console.log('coords:', coords);
+
+    console.log('e:', e);
+
+    // transitionProperty: 'all',
+    //   transitionDuration: '.1s',
+    //     transitionTimingFunction: 'linear',
+
+    switcherEl.style = 'transition: all .1s linear;';
+
+    const progressBarWidth = coords.width;
+    const progressBarLeftPos = coords.left;
+    const mouseCoordinateX = -(progressBarLeftPos - e.clientX); // координата клика мыши на прогресcбаре.
     // Тк она pageX считается от окна, а нам нужно от ширины прогрессбара,
     // то от левой позиции прогр - бара(она тоже от окна считается) отнимаем pageX и меняем знак на +
     const mouseCoordinateXpersents = mouseCoordinateX / progressBarWidth;
@@ -68,20 +88,38 @@ function PlayerControls({
     }
   }
 
-  function formatTime(num) {
-    const integer = Number.parseInt(num, 10);
+  // drag n drop
+  function onMouseDown(e) {
+    e.preventDefault(); // предотвратить запуск выделения (действие браузера)
 
-    const hour = Math.trunc(integer / 3600);
-    const min = Math.trunc(integer / 60) % 60;
-    const sec = integer % 60;
+    // const shiftX = e.clientX - e.target.getBoundingClientRect().left;
+    const shiftX = e.clientX - e.target.getBoundingClientRect().left;
+    console.log('shiftX:', shiftX);
+    // shiftY здесь не нужен, слайдер двигается только по горизонтали
 
-    function format() {
-      const getUnitOfTime = (val) => (`0${val}`).slice(-2);
-      const tempString = `${getUnitOfTime(hour)}:${getUnitOfTime(min)}:${getUnitOfTime(sec)}`;
-      return (!tempString[0] || !tempString[1]) ? tempString : tempString.slice(3);
+    function onMouseMove(e) {
+      let newLeft = e.clientX - shiftX - progressBarRef.current.getBoundingClientRect().left;
+      console.log('newLeft:', newLeft);
+
+      // курсор вышел из слайдера => оставить бегунок в его границах.
+      if (newLeft < 0) {
+        newLeft = 0;
+      }
+      const rightEdge = progressBarRef.current.offsetWidth - lengthSwitcher.current.offsetWidth;
+      if (newLeft > rightEdge) {
+        newLeft = rightEdge;
+      }
+
+      lengthSwitcher.current.style.left = `${newLeft}px`;
     }
 
-    return format();
+    function onMouseUp() {
+      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mousemove', onMouseMove);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
   return (
@@ -114,8 +152,19 @@ function PlayerControls({
       <div className={cn(progressControls)}>
         <div className={cn(timer, timerLength)}>{formatTime(currentTrackTime)}</div>
         <div className={cn(timer, timerCurrent)}>{formatTime(trackDuration)}</div>
-        <div className={cn(progressBar)} ref={progressBarRef} onClick={handleProgressBarClick}>
-          <span ref={lengthSwitcher} style={{ left: barPosition }}></span>
+        {/* progress bar */}
+        <div className={cn(progressBar)}
+          ref={progressBarRef}
+          onClick={handleProgressBarClick}>
+
+          {/* switcher */}
+          <span
+            ref={lengthSwitcher}
+            style={{
+              left: barPosition,
+            }}
+            onMouseDown={onMouseDown}
+          ></span>
         </div>
       </div>
       <div className={cn(mainControls)}>

@@ -59,8 +59,9 @@
     position: absolute;
     top: -150%;
     left: 0;
+    cursor: grab;
     transform: translateX(-50%);
-    transition: all .1s linear;
+    // transition: all .1s linear;
   }
 }
 
