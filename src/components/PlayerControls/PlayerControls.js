@@ -44,7 +44,7 @@ function PlayerControls({
   const currentTrackTime = useSelector((state) => state.mode.currTrackData.currentTime);
   const trackDuration = useSelector((state) => state.mode.currTrackData.trackDuration);
 
-  // обновление положения ползунка при клике
+  // обновление положения ползунка при проигрывании
   useEffect(() => {
     const currentDuration = `${currentTrackTime / trackDuration * 100}%`;
     setBarPosition(currentDuration);
@@ -54,68 +54,75 @@ function PlayerControls({
   function rewindTrack(seed) {
     dispatch(setCurrentTrackTime(trackDuration * seed));
     setIsRewindTrack(trackDuration * seed); // its a flag when we need to update current track time in player without unnecesarily rerenders of a Player component
-    setBarPosition(`${trackDuration * seed}%`);
   }
 
   // клик по прогресс бару
   function handleProgressBarClick(e) {
-    const progressBarEl = progressBarRef.current;
+    const barEl = progressBarRef.current;
     const switcherEl = lengthSwitcher.current;
 
-    const coords = progressBarEl.getBoundingClientRect();
-    console.log('progressBarEl:', progressBarEl);
-    console.log('coords:', coords);
+    const coords = barEl.getBoundingClientRect();
 
-    console.log('e:', e);
+    const barElWidth = coords.width;
+    const barElLeft = coords.left;
+    const mouseX = e.clientX;
 
-    // transitionProperty: 'all',
-    //   transitionDuration: '.1s',
-    //     transitionTimingFunction: 'linear',
-
-    switcherEl.style = 'transition: all .1s linear;';
-
-    const progressBarWidth = coords.width;
-    const progressBarLeftPos = coords.left;
-    const mouseCoordinateX = -(progressBarLeftPos - e.clientX); // координата клика мыши на прогресcбаре.
-    // Тк она pageX считается от окна, а нам нужно от ширины прогрессбара,
-    // то от левой позиции прогр - бара(она тоже от окна считается) отнимаем pageX и меняем знак на +
-    const mouseCoordinateXpersents = mouseCoordinateX / progressBarWidth;
+    // координата клика мыши на прогресcбаре.
+    const barClickX = (mouseX - barElLeft) / barElWidth;
 
     if (e.currentTarget === e.target) {
-      setBarPosition(`${mouseCoordinateXpersents * 100}%`);
+      // для плавного движения переключателя только по клику на прогресс бар
+      switcherEl.style = 'transition: all .1s linear;';
 
-      rewindTrack(mouseCoordinateXpersents);
+      // меняем положение ползунка
+      setBarPosition(`${barClickX * 100}%`);
+      // перематываем трек
+      rewindTrack(barClickX);
     }
   }
 
   // drag n drop
-  function onMouseDown(e) {
-    e.preventDefault(); // предотвратить запуск выделения (действие браузера)
 
-    // const shiftX = e.clientX - e.target.getBoundingClientRect().left;
-    const shiftX = e.clientX - e.target.getBoundingClientRect().left;
-    console.log('shiftX:', shiftX);
-    // shiftY здесь не нужен, слайдер двигается только по горизонтали
+  function onMouseDown(e) {
+    e.preventDefault();
+
+    const switcherEl = lengthSwitcher.current;
+    switcherEl.style = 'transition: none;';
+
+    const barEl = progressBarRef.current;
+
+    const coords = barEl.getBoundingClientRect();
+    const barElWidth = coords.width;
+    const barElLeft = coords.left;
+    const mouseX = e.clientX;
+    const mouseBarPosX = (mouseX - barElLeft) / barElWidth;
+
+    setBarPosition(`${mouseBarPosX * 100}%`);
 
     function onMouseMove(e) {
-      let newLeft = e.clientX - shiftX - progressBarRef.current.getBoundingClientRect().left;
-      console.log('newLeft:', newLeft);
+      const mouseX = e.clientX;
+      let mouseBarPosX = (mouseX - barElLeft) / barElWidth;
 
-      // курсор вышел из слайдера => оставить бегунок в его границах.
-      if (newLeft < 0) {
-        newLeft = 0;
+      // чтобы ползунок не выходил за границы прогресс бара
+      if (mouseBarPosX > 1) {
+        mouseBarPosX = 1;
       }
-      const rightEdge = progressBarRef.current.offsetWidth - lengthSwitcher.current.offsetWidth;
-      if (newLeft > rightEdge) {
-        newLeft = rightEdge;
+      if (mouseBarPosX < 0) {
+        mouseBarPosX = 0;
       }
 
-      lengthSwitcher.current.style.left = `${newLeft}px`;
+      setBarPosition(`${mouseBarPosX * 100}%`);
+      rewindTrack(mouseBarPosX);
     }
 
-    function onMouseUp() {
-      document.removeEventListener('mouseup', onMouseUp);
+    function onMouseUp(e) {
+      const mouseX = e.clientX;
+      const mouseBarPosX = (mouseX - barElLeft) / barElWidth;
+      setBarPosition(`${mouseBarPosX * 100}%`);
+      rewindTrack(mouseBarPosX);
+
       document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
     }
 
     document.addEventListener('mousemove', onMouseMove);
@@ -152,18 +159,14 @@ function PlayerControls({
       <div className={cn(progressControls)}>
         <div className={cn(timer, timerLength)}>{formatTime(currentTrackTime)}</div>
         <div className={cn(timer, timerCurrent)}>{formatTime(trackDuration)}</div>
-        {/* progress bar */}
         <div className={cn(progressBar)}
           ref={progressBarRef}
           onClick={handleProgressBarClick}>
-
-          {/* switcher */}
           <span
             ref={lengthSwitcher}
-            style={{
-              left: barPosition,
-            }}
+            style={{ left: barPosition }}
             onMouseDown={onMouseDown}
+            onDragStart={() => false}
           ></span>
         </div>
       </div>
