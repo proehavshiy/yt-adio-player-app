@@ -18,7 +18,7 @@ import {
   nextTrack, prevTrack, nextTrackInSequence, switchChangingTrackMode, switchLoopTrackMode,
 } from '../../store/actionCreators/actionCreator';
 import styles from './PlayerControls.module.scss';
-import ProgressBar from './ProgressBar/ProgressBar';
+import TrackProgressBar from './TrackProgressBar/TrackProgressBar';
 
 const cn = classNames.bind(styles);
 
@@ -78,7 +78,7 @@ function PlayerControls({
       <div className={cn(progressControls)}>
         <div className={cn(timer, timerLength)}>{formatTime(currentTrackTime)}</div>
         <div className={cn(timer, timerCurrent)}>{formatTime(trackDuration)}</div>
-        <ProgressBar
+        <TrackProgressBar
           setIsRewindTrack={setIsRewindTrack}
         />
       </div>

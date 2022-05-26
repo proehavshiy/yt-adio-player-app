@@ -1,23 +1,34 @@
-// progressBar
 .progressBar {
-  height: 10px;
+  width: 95%;
+  height: 100%;
   background-color: rgba(255, 255, 255, 0.31);
   border-radius: 16px;
   position: relative;
-  margin-top: 30px;
   cursor: pointer;
+}
 
-  & span {
-    display: block;
+.switcher {
+  display: block;
+  border-radius: 50%;
+  background: #FFFFFF;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  cursor: grab;
+  transform: translate(-50%, -50%);
+
+  &L {
     width: 20px;
     height: 20px;
-    border-radius: 50%;
-    background: #FFFFFF;
-    position: absolute;
-    top: -50%;
-    left: 0;
-    cursor: grab;
-    transform: translateX(-50%);
-    // transition: all .1s linear;
+  }
+
+  &M {
+    width: 16px;
+    height: 16px;
+  }
+
+  &S {
+    width: 10px;
+    height: 10px;
   }
 }
