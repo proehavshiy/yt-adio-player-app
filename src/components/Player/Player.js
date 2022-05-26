@@ -27,7 +27,6 @@ function Player({
 }) {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
   const [isRewindTrack, setIsRewindTrack] = useState(null);
 
   const currentTrackTime = useSelector((state) => state.mode.currTrackData.currentTime);
@@ -35,6 +34,7 @@ function Player({
 
   const changingModeState = useSelector((state) => state.mode.isRandomMode);
   const isLoopedTrack = useSelector((state) => state.mode.isLoopedTrack);
+  const volume = useSelector((state) => state.mode.volume);
 
   const dispatch = useDispatch();
 
@@ -48,6 +48,10 @@ function Player({
       audioEl.current.pause();
     }
   }, [isPlaying, currentTrackTime]);
+
+  useEffect(() => {
+    audioEl.current.volume = volume;
+  }, [volume]);
 
   // upd time of an active track
   // we use here isRewindTrack as a dependance
@@ -82,6 +86,8 @@ function Player({
         onLoadedMetadata={(e) => {
           // get the duration of current track before rendering
           dispatch(setTrackDuration(e.target.duration));
+          // set volume equal to state value
+          audioEl.current.volume = volume;
         }}
         onEmptied={() => {
           // это исправляет баг в сафари, когда он блокирует установку audio.currentTime = 0
@@ -98,6 +104,7 @@ function Player({
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
         setIsRewindTrack={setIsRewindTrack}
+      // setVolume={volume}
       />
       <p><strong>Next up: </strong>{nextSong}</p>
     </div>

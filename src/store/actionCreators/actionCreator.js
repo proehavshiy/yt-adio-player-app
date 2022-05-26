@@ -3,6 +3,7 @@ import {
   TRACK_NEXT, TRACK_PREV, TRACK_NEXT_IN_SEQUENCE, MODE_RANDOM, MODE_LOOP,
   MODE_TRACK_DURATION,
   MODE_TRACK_CURRENT_TIME,
+  MODE_VOLUME,
 } from '../actions/actions';
 
 function nextTrack(isRandom = false) {
@@ -43,6 +44,7 @@ function setTrackDuration(duration = 0) {
     duration,
   };
 }
+
 function setCurrentTrackTime(currentTime = 0) {
   return {
     type: MODE_TRACK_CURRENT_TIME,
@@ -50,20 +52,15 @@ function setCurrentTrackTime(currentTime = 0) {
   };
 }
 
+function setVolume(volume = 1) {
+  return {
+    type: MODE_VOLUME,
+    volume,
+  };
+}
+
 export {
   nextTrack, prevTrack, nextTrackInSequence, switchChangingTrackMode, switchLoopTrackMode,
   setTrackDuration, setCurrentTrackTime,
+  setVolume,
 };
-
-// export function incrementCounter(payload) {
-//   return {
-//     type: INCREMENT,
-//     payload,
-//   };
-// }
-// export function decrementCounter(payload) {
-//   return {
-//     type: DECREMENT,
-//     payload,
-//   };
-// }

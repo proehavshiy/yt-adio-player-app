@@ -9,10 +9,13 @@
 import { modeInitialState } from '../initialState';
 import {
   MODE_RANDOM, MODE_LOOP, MODE_TRACK_DURATION, MODE_TRACK_CURRENT_TIME,
+  MODE_VOLUME,
 } from '../actions/actions';
 
 function modeReducer(state = modeInitialState, action) {
-  const { type, duration, currentTime } = action;
+  const {
+    type, duration, currentTime, volume,
+  } = action;
   switch (type) {
     case MODE_RANDOM:
       return {
@@ -39,6 +42,11 @@ function modeReducer(state = modeInitialState, action) {
           ...state.currTrackData,
           currentTime,
         },
+      };
+    case MODE_VOLUME:
+      return {
+        ...state,
+        volume,
       };
     default:
       return state;

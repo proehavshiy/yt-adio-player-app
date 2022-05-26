@@ -85,6 +85,33 @@
   background-color: transparent;
   width: 20px;
   height: 20px;
+
+  &Disabled {
+    position: relative;
+
+    &::before,
+    &:after {
+      content: "";
+      display: block;
+      width: 22px;
+      height: 1px;
+      background-color: #8996B8;
+      opacity: .8;
+      border-radius: 20px;
+
+      position: absolute;
+      top: 48%;
+      right: 10%;
+    }
+
+    &::after {
+      transform: rotate(45deg);
+    }
+
+    &::before {
+      transform: rotate(-45deg);
+    }
+  }
 }
 
 // loopBtn

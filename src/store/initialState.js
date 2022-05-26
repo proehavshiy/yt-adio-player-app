@@ -28,6 +28,7 @@ const tracksInitialState = {
 const modeInitialState = {
   isRandomMode: false,
   isLoopedTrack: false,
+  volume: 1,
   currTrackData: {
     trackDuration: 0,
     currentTime: 0,
