@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-mixed-operators */
 /* eslint-disable no-shadow */
-/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 import React, { createRef, useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from './ProgressBar.module.scss';
+import getClickCoordsInsideArea from '../../../utils/getClickCoordsInsideArea';
 
 import { setCurrentTrackTime } from '../../../store/actionCreators/actionCreator';
 
@@ -25,38 +23,33 @@ function ProgressBar({ setIsRewindTrack }) {
 
   // обновление положения ползунка при проигрывании
   useEffect(() => {
-    const currentDuration = `${currentTrackTime / trackDuration * 100}%`;
+    const currentDuration = `${(currentTrackTime / trackDuration) * 100}%`;
     setBarPosition(currentDuration);
   }, [currentTrackTime]);
 
   // перемотка трека
   function rewindTrack(seed) {
     dispatch(setCurrentTrackTime(trackDuration * seed));
-    setIsRewindTrack(trackDuration * seed); // its a flag when we need to update current track time in player without unnecesarily rerenders of a Player component
+    // its a flag when we need to update current track time in player
+    // without unnecesarily rerenders of a Player component
+    setIsRewindTrack(trackDuration * seed);
+  }
+
+  function updateBarControls(newLength) {
+    // меняем положение переключателя на прогресс-баре
+    setBarPosition(`${newLength * 100}%`);
+    // перематываем трек
+    rewindTrack(newLength);
   }
 
   // клик по прогресс бару
-  function handleProgressBarClick(e) {
-    const barEl = progressBarRef.current;
-    const switcherEl = lengthSwitcher.current;
-
-    const coords = barEl.getBoundingClientRect();
-
-    const barElWidth = coords.width;
-    const barElLeft = coords.left;
-    const mouseX = e.clientX;
-
-    // координата клика мыши на прогресcбаре.
-    const barClickX = (mouseX - barElLeft) / barElWidth;
+  function handleBarClick(e) {
+    const { clickInsideAreaX } = getClickCoordsInsideArea(e, progressBarRef.current);
+    updateBarControls(clickInsideAreaX);
 
     if (e.currentTarget === e.target) {
-      // для плавного движения переключателя только по клику на прогресс бар
-      switcherEl.style = 'transition: all .1s linear;';
-
-      // меняем положение ползунка
-      setBarPosition(`${barClickX * 100}%`);
-      // перематываем трек
-      rewindTrack(barClickX);
+      // для плавного движения переключателя только при клике на прогресс-бар
+      lengthSwitcher.current.style = 'transition: all .1s linear;';
     }
   }
 
@@ -65,40 +58,22 @@ function ProgressBar({ setIsRewindTrack }) {
   function onMouseDown(e) {
     e.preventDefault();
 
-    const switcherEl = lengthSwitcher.current;
-    switcherEl.style = 'transition: none;';
+    // убираем транзишн, чтобы отклик от драгндроп был четче
+    lengthSwitcher.current.style.transition = 'none';
 
-    const barEl = progressBarRef.current;
+    const progressBarEl = progressBarRef.current;
 
-    const coords = barEl.getBoundingClientRect();
-    const barElWidth = coords.width;
-    const barElLeft = coords.left;
-    const mouseX = e.clientX;
-    const mouseBarPosX = (mouseX - barElLeft) / barElWidth;
-
-    setBarPosition(`${mouseBarPosX * 100}%`);
+    const { clickInsideAreaX } = getClickCoordsInsideArea(e, progressBarEl);
+    updateBarControls(clickInsideAreaX);
 
     function onMouseMove(e) {
-      const mouseX = e.clientX;
-      let mouseBarPosX = (mouseX - barElLeft) / barElWidth;
-
-      // чтобы ползунок не выходил за границы прогресс бара
-      if (mouseBarPosX > 1) {
-        mouseBarPosX = 1;
-      }
-      if (mouseBarPosX < 0) {
-        mouseBarPosX = 0;
-      }
-
-      setBarPosition(`${mouseBarPosX * 100}%`);
-      rewindTrack(mouseBarPosX);
+      const { clickInsideAreaX } = getClickCoordsInsideArea(e, progressBarEl);
+      updateBarControls(clickInsideAreaX);
     }
 
     function onMouseUp(e) {
-      const mouseX = e.clientX;
-      const mouseBarPosX = (mouseX - barElLeft) / barElWidth;
-      setBarPosition(`${mouseBarPosX * 100}%`);
-      rewindTrack(mouseBarPosX);
+      const { clickInsideAreaX } = getClickCoordsInsideArea(e, progressBarEl);
+      updateBarControls(clickInsideAreaX);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -110,43 +85,24 @@ function ProgressBar({ setIsRewindTrack }) {
 
   // mobile drag n drop touch API
 
-  function onTouchStart(e) {
-    const switcherEl = lengthSwitcher.current;
-    switcherEl.style.transition = 'none';
+  function onTouchStart() {
+    // убираем транзишн, чтобы отклик от драгндроп был четче
+    lengthSwitcher.current.style.transition = 'none';
   }
+
   function onTouchMove(e) {
-    const touchLocation = e.targetTouches[0];
-    const touchX = touchLocation.clientX;
-
-    const barEl = progressBarRef.current;
-
-    const coords = barEl.getBoundingClientRect();
-    const barElWidth = coords.width;
-    const barElLeft = coords.left;
-
-    let touchBarPosX = (touchX - barElLeft) / barElWidth;
-
-    // чтобы ползунок не выходил за границы прогресс бара
-    if (touchBarPosX > 1) {
-      touchBarPosX = 1;
-    }
-    if (touchBarPosX < 0) {
-      touchBarPosX = 0;
-    }
-
-    setBarPosition(`${touchBarPosX * 100}%`);
-    rewindTrack(touchBarPosX);
+    const { clickInsideAreaX } = getClickCoordsInsideArea(e, progressBarRef.current);
+    updateBarControls(clickInsideAreaX);
   }
 
   return (
     <div className={cn(progressBar)}
       ref={progressBarRef}
-      onClick={handleProgressBarClick}>
+      onClick={handleBarClick}>
       <span
         ref={lengthSwitcher}
         style={{ left: barPosition }}
         onMouseDown={onMouseDown}
-        onDragStart={() => false}
         onTouchMove={onTouchMove}
         onTouchStart={onTouchStart}
       ></span>
