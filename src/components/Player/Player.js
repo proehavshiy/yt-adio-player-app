@@ -16,8 +16,6 @@ import {
 const cn = classNames.bind(styles);
 const { player } = styles;
 
-// "homepage": "https://proehavshiy.github.io/yt-adio-player-app",
-
 function Player() {
   const audioEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -57,14 +55,28 @@ function Player() {
     audioEl.current.currentTime = currentTrackTime;
   }, [isRewindTrack]);
 
-  function loopTrack() {
+  const updateTrackTime = (e) => dispatch(setCurrentTrackTime(e.target.currentTime));
+  const toggleLoopMode = () => {
     if (isLoopedTrack) {
       audioEl.current.currentTime = 0;
     } else {
       dispatch(nextTrack(changingModeState));
       dispatch(nextTrackInSequence());
     }
-  }
+  };
+  const setInitialAudioStates = (e) => {
+    // get the duration of current track before rendering
+    dispatch(setTrackDuration(e.target.duration));
+    // set volume equal to the state value
+    audioEl.current.volume = currVolume;
+  };
+
+  const setAutoPlayNextTrack = () => {
+    // установка на onEmptied фиксит баг в сафари,
+    // когда он блокирует установку audio.currentTime = 0 до взаимодейтвия пользователя
+    // и позволяет не блокировать проигрывание после смены трека по кнопке
+    audioEl.current.play();
+  };
 
   const heading = isPlaying ? 'playing now' : 'turn sth on!';
   const currentSong = tracks[currIndex];
@@ -73,25 +85,10 @@ function Player() {
   return (
     <div className={cn(player)}>
       <audio ref={audioEl} src={currentSong.src} preload="metadata"
-        onTimeUpdate={(e) => {
-          dispatch(setCurrentTrackTime(e.target.currentTime));
-        }}
-        onEnded={() => {
-          // checking looping mode when track was ended
-          loopTrack();
-        }}
-        onLoadedMetadata={(e) => {
-          // get the duration of current track before rendering
-          dispatch(setTrackDuration(e.target.duration));
-          // set volume equal to state value
-          audioEl.current.volume = currVolume;
-        }}
-        onEmptied={() => {
-          // это исправляет баг в сафари, когда он блокирует установку audio.currentTime = 0
-          // до взаимодейтвия пользователя и позволяет не блокировать
-          // проигрывание после смены трека по кнопке
-          audioEl.current.play();
-        }}
+        onTimeUpdate={updateTrackTime}
+        onEnded={toggleLoopMode} // check looping mode when track was ended
+        onLoadedMetadata={setInitialAudioStates}
+        onEmptied={setAutoPlayNextTrack}
       >
       </audio>
       <h4>{heading}</h4>
