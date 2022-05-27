@@ -22,7 +22,7 @@ function VolumeProgressBar() {
     setBarPosition(`${currVolume * 100}%`);
   }, [currVolume]);
 
-  const updateVolume = (val) => dispatch(setVolume(val));
+  const updateVolume = (newVolume) => dispatch(setVolume(newVolume, currVolume));
 
   return (
     <div className={cn(volumeProgressBar)}>
