@@ -9,10 +9,11 @@ So I decided to make my own player app that can convert youtube music videos to 
 ### Interface functionality:
 - [x] play tracks
 - [x] skip tracks
-- [ ] volume changer
+- [ ] volume changer (drag n drop desktop and mute on mobile)
 - [x] autoplay next track after ending of a current track
 - [x] progressbar
-- [ ] progressbar drag n drop
+- [x] drag n drop rewinding track (desktop via `mouse events`)
+- [x] drag n drop rewinding track (mobile via `touch API`)
 - [x] loop track button
 - [x] random order button
 ### Playlist functionality:
@@ -24,14 +25,14 @@ So I decided to make my own player app that can convert youtube music videos to 
 - [ ] cross-browser and adaptive layouts
 ### Bugs to solve:
 - [x] Safari block playing after skip track (but [autoplay policy error is instead but with no valuent effect](https://developer.chrome.com/blog/autoplay/))
-- [ ] progressbar freezes and may get left >100% and fly beyond the borders of its block
-- [ ] prevent the ability of pushing skip track buttons from uncountable pushing after pushing to keep better UX
+- [x] progressbar freezes and may get left >100% and fly beyond the borders of its block
+- [x] prevent the ability of pushing skip track buttons from uncountable pushing after pushing to keep better UX
 
 ## Dependencies
 - [x] `ESlint` and airbnb style-guide
 - [x] `SASS` and `CSS Modules`
-- [ ] `classnames` for classes
-- [ ] `Redux` for state management 
+- [x] `classnames` for classes
+- [x] `Redux` for state management 
 
 <br />
 

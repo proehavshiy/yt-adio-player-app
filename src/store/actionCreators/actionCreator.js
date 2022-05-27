@@ -52,10 +52,11 @@ function setCurrentTrackTime(currentTime = 0) {
   };
 }
 
-function setVolume(volume = 1) {
+function setVolume(currVolume = 1, prevVolume = 1) {
   return {
     type: MODE_VOLUME,
-    volume,
+    currVolume,
+    prevVolume,
   };
 }
 

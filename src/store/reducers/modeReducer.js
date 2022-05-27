@@ -14,7 +14,7 @@ import {
 
 function modeReducer(state = modeInitialState, action) {
   const {
-    type, duration, currentTime, volume,
+    type, duration, currentTime, currVolume, prevVolume,
   } = action;
   switch (type) {
     case MODE_RANDOM:
@@ -46,7 +46,11 @@ function modeReducer(state = modeInitialState, action) {
     case MODE_VOLUME:
       return {
         ...state,
-        volume,
+        volume: {
+          ...state.volume,
+          current: currVolume,
+          prev: prevVolume,
+        },
       };
     default:
       return state;
